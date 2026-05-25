@@ -1,0 +1,27 @@
+body {
+  background-color: lightblue;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 50vh;
+  margin: 0;
+}
+
+.container {
+  text-align: center;
+}
+
+h1 {
+  color: black;
+  text-align: center;
+  font-weight: bold;
+}
+
+#time {
+  font-size: 50px;
+  font-weight: bold;
+}
+
+

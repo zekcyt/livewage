@@ -1,6 +1,7 @@
 let startBtn = document.getElementById('start')
 let stopBtn = document.getElementById('stop')
 let resetBtn = document.getElementById('reset')
+let timer = true;
 let hour = 0o0;
 let minute = 0o0;
 let second = 0o0;
@@ -39,6 +40,12 @@ function stopWatch(){
             second = 0;
         }
 
+        if(second == 60){
+            hour = 0;
+            minute++;
+            second = 0;
+        }
+
         let hrString = hour;
         let minString = minute;
         let secString = second;
@@ -52,8 +59,8 @@ function stopWatch(){
             minString = "0" + minString;
         }
 
-        if(count < 10) {
-            secString = "0" + countString;
+        if(second < 10) {
+            secString = "0" + secString;
         }
 
         if (count < 10) {
