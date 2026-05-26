@@ -1,76 +1,86 @@
-let startBtn = document.getElementById('start')
-let stopBtn = document.getElementById('stop')
-let resetBtn = document.getElementById('reset')
-let timer = true;
-let hour = 0o0;
-let minute = 0o0;
-let second = 0o0;
-let count = 0o0;
-startBtn.addEventListener('click', function (){
-    timer = true;
-    stopWatch();
-});
-stopBtn.addEventListener('click', function (){
-    timer = false;
-});
-resetBtn.addEventListener('click', function(){
-    timer = false;
-    hour = 0;
-    minute = 0;
-    second = 0;
-    count = 0;
-    document.getElementById('hr').innerHTML = "00";
-    document.getElementById('min').innerHTML = "00";
-    document.getElementById('sec').innerHTML = "00";
-    document.getElementById('count').innerHTML = "00";
-});
+class Stopwatch {
+    constructor() {
+        this.startTime = 0;
+        this.endTime = 0;
+        this.running = false;
+        this.interval = null;
+        this.elapsedTime = 0;
+    }
 
-function stopWatch(){
-    if(timer){
-        count++;
-
-        if(count == 100){
-            second++;
-            count = 0;
+    start() {
+        if (this.running) {
+            console.warn ("stopwatch is already running" );
+            return;
         }
+        this.interval = setInterval(() => {
+            this.updateDisplay();
+        }, 10);
+        this.running = true;
+        this.startTime = Date.now();
+        console.log("stopwatch started");
+    }
 
-        if(minute == 60){
-            hour++;
-            minute = 0;
-            second = 0;
+    stop() {
+        if (!this.running) {
+            console.warn("stopwatch is not running");
+            return;
         }
+        this.endTime = Date.now();
+        this.running = false;
+        clearInterval(this.interval);
+        const duration = (this.endTime - this.startTime) / 1000; 
+        console.log(`stopwatch stopped. duration: ${duration.toFixed(2)} seconds`);
+        return duration;
+    }
 
-        if(second == 60){
-            hour = 0;
-            minute++;
-            second = 0;
-        }
+    reset() {
+        clearInterval(this.interval);
 
-        let hrString = hour;
-        let minString = minute;
-        let secString = second;
-        let countString = count;
+        this.running = false;
+        this.startTime = 0;
+        this.endTime = 0;
+        this.elapsedTime = 0;
 
-        if (hour < 10) {
-            hrString = "0" + hrString;
-        }
+        document.getElementById('hr').textContent = "00";
+        document.getElementById('min').textContent = "00";
+        document.getElementById('sec').textContent = "00";
+        document.getElementById('count').textContent = "00";
+    }
 
-        if (minute < 10) {
-            minString = "0" + minString;
-        }
+    updateDisplay() {
+        const elapsed = Date.now() - this.startTime;
 
-        if(second < 10) {
-            secString = "0" + secString;
-        }
+        let hours = Math.floor(elapsed / (1000 * 60 * 60));
+        let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
+        let seconds = Math.floor((elapsed / 1000) % 60)
+        let milliseconds = Math.floor((elapsed % 1000) / 10);
 
-        if (count < 10) {
-            countString = "0" + countString;
-        }
+        hours = String(hours).padStart(2, '0');
+        minutes = String(minutes).padStart(2, '0');
+        seconds = String(seconds).padStart(2, '0');
+        milliseconds = String(milliseconds).padStart(2, '0');
 
-        document.getElementById('hr').innerHTML = hrString;
-        document.getElementById('min').innerHTML = minString;
-        document.getElementById('sec').innerHTML = secString;
-        document.getElementById('count').innerHTML = countString;
-        setTimeout(stopWatch, 10);
+        document.getElementById('hr').textContent = hours;
+        document.getElementById('min').textContent = minutes;
+        document.getElementById('sec').textContent = seconds;
+        document.getElementById('count').textContent = milliseconds;
     }
 }
+
+const stopwatch = new Stopwatch();
+const startBtn = document.getElementById('start');
+const stopBtn = document.getElementById('stop');
+const resetBtn = document.getElementById('reset');
+
+startBtn.addEventListener('click', () => {
+    stopwatch.start();
+});
+
+stopBtn.addEventListener('click', () => {
+    stopwatch.stop();
+});
+
+resetBtn.addEventListener('click', () => {
+    stopwatch.reset();
+});
+
