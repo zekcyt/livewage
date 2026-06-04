@@ -5,6 +5,7 @@ class Stopwatch {
         this.running = false;
         this.interval = null;
         this.elapsedTime = 0;
+        this.wage = 0;
     }
 
     start() {
@@ -12,6 +13,9 @@ class Stopwatch {
             console.warn ("stopwatch is already running" );
             return;
         }
+
+        this.hourlyRate();
+
         this.interval = setInterval(() => {
             this.updateDisplay();
         }, 10);
@@ -47,8 +51,24 @@ class Stopwatch {
         document.getElementById('count').textContent = "00";
     }
 
+    hourlyRate() {
+    const input = document.getElementById('rate');
+
+    console.log("INPUT ELEMENT:", input);
+    console.log("RAW VALUE:", input.value);
+
+    this.wage = parseFloat(input.value) || 0;
+
+    console.log("WAGE:", this.wage);
+    }
+
     updateDisplay() {
         const elapsed = Date.now() - this.startTime;
+        const hoursWorked = elapsed / (1000 * 60 * 60)
+        const earnings = hoursWorked * this.wage;
+
+        document.getElementById('earnings').textContent =
+            earnings.toFixed(6);
 
         let hours = Math.floor(elapsed / (1000 * 60 * 60));
         let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
@@ -67,20 +87,23 @@ class Stopwatch {
     }
 }
 
-const stopwatch = new Stopwatch();
-const startBtn = document.getElementById('start');
-const stopBtn = document.getElementById('stop');
-const resetBtn = document.getElementById('reset');
+window.addEventListener('DOMContentLoaded', () => {
 
-startBtn.addEventListener('click', () => {
-    stopwatch.start();
-});
+    const stopwatch = new Stopwatch();
+    const startBtn = document.getElementById('start');
+    const stopBtn = document.getElementById('stop');
+    const resetBtn = document.getElementById('reset');
 
-stopBtn.addEventListener('click', () => {
-    stopwatch.stop();
-});
+    startBtn.addEventListener('click', () => {
+        stopwatch.start();
+    });
 
-resetBtn.addEventListener('click', () => {
-    stopwatch.reset();
-});
+    stopBtn.addEventListener('click', () => {
+        stopwatch.stop();
+    });
 
+    resetBtn.addEventListener('click', () => {
+        stopwatch.reset();
+    });
+
+}); 

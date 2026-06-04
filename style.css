@@ -24,4 +24,8 @@ h1 {
   font-weight: bold;
 }
 
+#rateContainer {
+  margin-bottom: 20px;
+  text-align: center;
+}
 
