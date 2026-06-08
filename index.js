@@ -49,6 +49,7 @@ class Stopwatch {
         document.getElementById('min').textContent = "00";
         document.getElementById('sec').textContent = "00";
         document.getElementById('count').textContent = "00";
+        document.getElementById('earnings').textContent = "0.00";
     }
 
     hourlyRate() {
@@ -68,7 +69,7 @@ class Stopwatch {
         const earnings = hoursWorked * this.wage;
 
         document.getElementById('earnings').textContent =
-            earnings.toFixed(6);
+            earnings.toFixed(2);
 
         let hours = Math.floor(elapsed / (1000 * 60 * 60));
         let minutes = Math.floor((elapsed / (1000 * 60)) % 60);
