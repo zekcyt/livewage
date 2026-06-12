@@ -88,23 +88,42 @@ class Stopwatch {
     }
 }
 
+class currencyMenu {
+  dropdown() {
+    document.getElementById("rateDropdown").classList.toggle("show");
+  }
+}
+
+window.onclick = function (event) {
+  if (!event.target.matches('.dropbtn')) {
+    const dropdowns = document.getElementsByClassName("dropdown-content");
+    for (let i = 0; i < dropdowns.length; i++) {
+      const openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+};
+
 window.addEventListener('DOMContentLoaded', () => {
 
-    const stopwatch = new Stopwatch();
-    const startBtn = document.getElementById('start');
-    const stopBtn = document.getElementById('stop');
-    const resetBtn = document.getElementById('reset');
+        const stopwatch = new Stopwatch();
+        const startBtn = document.getElementById('start');
+        const stopBtn = document.getElementById('stop');
+        const resetBtn = document.getElementById('reset');
 
-    startBtn.addEventListener('click', () => {
-        stopwatch.start();
-    });
+        startBtn.addEventListener('click', () => {
+            stopwatch.start();
+        });
 
-    stopBtn.addEventListener('click', () => {
-        stopwatch.stop();
-    });
+        stopBtn.addEventListener('click', () => {
+            stopwatch.stop();
+        });
 
-    resetBtn.addEventListener('click', () => {
-        stopwatch.reset();
-    });
+        resetBtn.addEventListener('click', () => {
+            stopwatch.reset();
+        });
 
-}); 
+});
+

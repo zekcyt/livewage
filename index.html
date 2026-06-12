@@ -10,11 +10,30 @@
 </head>
 <body>
     <div class="container">
-        <h1> Online Stopwatch <br>
-             With Live Wage Tracker</h1>
+        <h1> Online Stopwatch</h1>
+
+    <div class="subtext">
+        <h2> with live wage tracker and currency conversion</h2>
 
         <div id="rateContainer">
-           <input type="number" id="rate" placeholder="Hourly Rate">
+           <input type="number" id="rate" placeholder="rate e.g. 20">
+
+        <div id="currencyContainer">
+            <button onclick="setCurrency()" class="dropbtn">Currency ⌄
+            </button>
+            <div id="rateDropdown" class="dropdown-content">
+            <a href="#usd">USD</a>
+            <a href="#eur">EUR</a>
+            <a href="#pln">PLN</a>
+            <a href="#gbp">GBP</a>
+            <a href="#jpy">JPY</a>
+            <a href="#cny">CNY</a>
+            <a href="#aud">AUD</a>
+            <a href="#cad">CAD</a>
+            <a href="#chf">CHF</a>
+            <a href="#rub">RUB</a>
+        </div>
+    </div>
 
         <p>Earnings: $<span id="earnings">0.00</span></p>
         </div>

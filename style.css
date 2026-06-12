@@ -1,10 +1,10 @@
 body {
   background-color: #242423;
-
+  color: white;
+  font-family: "Monaco", "Lucida Console", monospace;
   display: flex;
   justify-content: center;
   align-items: center;
-
   height: 50vh;
   margin: 0;
 }
@@ -13,18 +13,57 @@ body {
   text-align: center;
 }
 
-h1 {
-  color: #F3F3F3;
+.subtext {
+  color: #666666;
   text-align: center;
+  font-weight: lighter;
+}
+
+.dropbtn {
+  background-color: #3d3d3d;
+  color: white;
+  padding: 12px;
+  font-size: 12px;
+}
+
+h1 {
+  padding: 12px
+}
+
+#rate  {
+  background-color: #3d3d3d;
+  font-weight: 200;
+  color: white;
+  padding: 12px;
+  font-size: 12px;
 }
 
 #time {
-  color: #F3F3F3;
   font-size: 50px;
+  color: white;
+  padding: 12px;
 }
 
 #rateContainer {
+  color: white;
+  padding: 16px;
   margin-bottom: 20px;
-  text-align: center;
 }
 
+#start{
+  background-color: #3d3d3d;
+  padding: 12px;
+  font-size: 12px;
+}
+
+#stop{
+  background-color: #3d3d3d;
+  padding: 12px;
+  font-size: 12px;
+}
+
+#reset{
+  background-color: #3d3d3d;
+  padding: 12px;
+  font-size: 12px;
+}
