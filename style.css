@@ -23,4 +23,8 @@ h1 {
   font-size: 50px;
 }
 
+#rateContainer {
+  margin-bottom: 20px;
+  text-align: center;
+}
 
