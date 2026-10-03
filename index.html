@@ -1,68 +1,77 @@
+<!DOCTYPE html>
+<!-- DOCTYPE added so the browser uses standards mode instead of quirks mode -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" 
-          content="IE=edge">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-    <title> Live Wage Tracker </title>
-    <link rel="stylesheet" href="style.css">  
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Wage Tracker</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1> Online Stopwatch</h1>
+    <!-- <main> replaces the old <div class="container">; same class, so the
+         CSS still targets it, but it's the semantic tag for the page's main content -->
+    <main class="container">
+        <!-- Title block. The subtitle used to wrap the whole form (unclosed
+             .subtext div); now it's just the subtitle text. -->
+        <header>
+            <h1>Online Stopwatch</h1>
+            <h2 class="subtext">Live wage tracker with currency conversion</h2>
+        </header>
 
-    <div class="subtext">
-        <h2> with live wage tracker and currency conversion</h2>
+        <!-- .card is the lighter panel that holds everything interactive -->
+        <section class="card">
+            <div id="rateContainer">
+                <!-- New label above the input; for="rate" links it to the input
+                     so clicking the label focuses the field -->
+                <label for="rate">Hourly rate</label>
 
-        <div id="rateContainer">
-           <input type="number" id="rate" placeholder="rate e.g. 20">
+                <!-- .rate-row puts the input and currency button side by side -->
+                <div class="rate-row">
+                    <input type="number" id="rate" placeholder="e.g. 20">
 
-        <div id="currencyContainer">
-            <button onclick="setCurrency()" class="dropbtn">Currency ⌄
-            </button>
-            <div id="rateDropdown" class="dropdown-content">
-            <a href="#usd">USD</a>
-            <a href="#eur">EUR</a>
-            <a href="#pln">PLN</a>
-            <a href="#gbp">GBP</a>
-            <a href="#jpy">JPY</a>
-            <a href="#cny">CNY</a>
-            <a href="#aud">AUD</a>
-            <a href="#cad">CAD</a>
-            <a href="#chf">CHF</a>
-            <a href="#rub">RUB</a>
-        </div>
-    </div>
+                    <!-- position: relative in CSS so the menu below can be placed
+                         directly under this button -->
+                    <div id="currencyContainer">
+                        <!-- setCurrency() is defined in index.js and toggles the menu -->
+                        <button onclick="setCurrency()" class="dropbtn">Currency ⌄</button>
+                        <!-- Hidden by default; index.js adds the "show" class to reveal it -->
+                        <div id="rateDropdown" class="dropdown-content">
+                            <a href="#usd">USD</a>
+                            <a href="#eur">EUR</a>
+                            <a href="#pln">PLN</a>
+                            <a href="#gbp">GBP</a>
+                            <a href="#jpy">JPY</a>
+                            <a href="#cny">CNY</a>
+                            <a href="#aud">AUD</a>
+                            <a href="#cad">CAD</a>
+                            <a href="#chf">CHF</a>
+                            <a href="#rub">RUB</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <p>Earnings: $<span id="earnings">0.00</span></p>
-        </div>
-        
+            <!-- Timer. The spans are on one line with no spaces between them so
+                 the browser doesn't insert gaps between the digits. The last
+                 separator is "." because #count shows hundredths of a second;
+                 the "ms" class greys those digits out. All ids are unchanged. -->
+            <div id="time">
+                <span class="digit" id="hr">00</span><span class="txt">:</span><span class="digit" id="min">00</span><span class="txt">:</span><span class="digit" id="sec">00</span><span class="txt">.</span><span class="digit ms" id="count">00</span>
+            </div>
 
-        <div id="time">
-            <span class="digit" id="hr">
-                00</span>
-            <span class="txt">:</span>
-            <span class="digit" id="min">
-                00</span>
-            <span class="txt">:</span>
-            <span class="digit" id="sec">
-                00</span>
-            <span class="txt">:</span>
-            <span class="digit" id="count">
-                00</span>
-        </div>
-        <div id="buttons">
-            <button class="btn" id="start"> 
-                Start</button>
-            <button class="btn" id="stop"> 
-                Stop</button>
-            <button class="btn" id="reset"> 
-                Reset</button>
-        </div>
-    </div>
+            <!-- Moved below the timer. .amount styles the number separately from
+                 the "Earnings" label; #earnings is still what index.js updates. -->
+            <p class="earnings">Earnings <span class="amount">$<span id="earnings">0.00</span></span></p>
+
+            <!-- "primary" gives Start the accent colour; Stop/Reset stay plain -->
+            <div id="buttons">
+                <button class="btn primary" id="start">Start</button>
+                <button class="btn" id="stop">Stop</button>
+                <button class="btn" id="reset">Reset</button>
+            </div>
+        </section>
+    </main>
     <script src="index.js"></script>
-
 </body>
-
 </html>

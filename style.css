@@ -1,69 +1,291 @@
-body {
-  background-color: #242423;
-  color: white;
-  font-family: "Monaco", "Lucida Console", monospace;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50vh;
-  margin: 0;
+/* ------------------------------------------------------------------
+   Colour + font variables
+   Defined once here and reused below via var(--name), so changing a
+   colour in one place updates the whole page. Values are based on the
+   Claude desktop app's dark theme: warm greys instead of pure black.
+   ------------------------------------------------------------------ */
+:root {
+  --bg: #262624;            /* page background */
+  --surface: #30302e;       /* the card and dropdown panel */
+  --surface-hover: #3a3a37; /* hover colour for buttons / menu items */
+  --border: #3e3e3a;        /* thin 1px outlines */
+  --text: #f5f4ef;          /* main text (off-white, easier on the eyes than #fff) */
+  --text-muted: #a6a39b;    /* secondary text: subtitle, labels */
+  --text-faint: #6f6d66;    /* least important: placeholders, timer colons */
+  --accent: #d97757;        /* the one accent colour, only used on Start */
+  --accent-hover: #c96a4b;  /* slightly darker accent for hover */
+  --radius: 10px;           /* corner rounding for the card */
+  --radius-sm: 8px;         /* corner rounding for inputs and buttons */
+  /* Font stacks: the browser uses the first font in each list it has installed */
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-serif: Georgia, "Times New Roman", serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Mono", Consolas, monospace;
 }
 
+/* Make width/height include padding and border, so sizes are predictable */
+* {
+  box-sizing: border-box;
+}
+
+/* Centre the content both ways on a full-height page */
+body {
+  margin: 0;
+  min-height: 100vh;          /* was height: 50vh, which cut the page off */
+  display: flex;
+  justify-content: center;    /* horizontal centring */
+  align-items: center;        /* vertical centring */
+  padding: 24px 16px;         /* keeps content off the screen edges on phones */
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);   /* was Monaco; monospace is now only used for numbers */
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased; /* smoother text rendering on macOS */
+}
+
+/* Caps the width so the layout doesn't stretch on wide screens */
 .container {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* ------------------------------------------------------------------
+   Title + subtitle
+   ------------------------------------------------------------------ */
+header {
+  margin-bottom: 24px;
   text-align: center;
+}
+
+/* Serif heading, similar to the headings in Claude's interface */
+h1 {
+  margin: 0 0 4px;
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 400;           /* regular weight instead of bold looks cleaner */
+  letter-spacing: -0.01em;
 }
 
 .subtext {
-  color: #666666;
-  text-align: center;
-  font-weight: lighter;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+/* The panel holding the input, timer and buttons */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+/* ------------------------------------------------------------------
+   Hourly rate input
+   ------------------------------------------------------------------ */
+#rateContainer label {
+  display: block;             /* puts the label on its own line above the input */
+  margin-bottom: 6px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Input and currency button side by side, 8px apart */
+.rate-row {
+  display: flex;
+  gap: 8px;
+}
+
+#rate {
+  flex: 1;                    /* input takes all the width the button doesn't */
+  min-width: 0;               /* lets it shrink on narrow screens instead of overflowing */
+  padding: 10px 12px;
+  background: var(--bg);      /* darker than the card so it reads as a field */
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;              /* inputs don't inherit the page font by default */
+  outline: none;              /* removes the browser's default blue focus ring... */
+  transition: border-color 0.15s;
+}
+
+#rate::placeholder {
+  color: var(--text-faint);
+}
+
+/* ...and replaces it with a subtle lighter border when the field is focused */
+#rate:focus {
+  border-color: var(--text-faint);
+}
+
+/* ------------------------------------------------------------------
+   Currency dropdown
+   ------------------------------------------------------------------ */
+
+/* position: relative makes this the reference point for the absolutely
+   positioned menu below, so the menu appears right under the button */
+#currencyContainer {
+  position: relative;
 }
 
 .dropbtn {
-  background-color: #3d3d3d;
-  color: white;
-  padding: 12px;
-  font-size: 12px;
+  height: 100%;               /* matches the input's height */
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  transition: background-color 0.15s;
 }
 
-h1 {
-  padding: 12px
+.dropbtn:hover {
+  background: var(--surface-hover);
 }
 
-#rate  {
-  background-color: #3d3d3d;
-  font-weight: 200;
-  color: white;
-  padding: 12px;
-  font-size: 12px;
+/* The menu panel. Hidden by default; see .show below */
+.dropdown-content {
+  display: none;
+  position: absolute;         /* floats over the page instead of pushing content down */
+  right: 0;                   /* lines up with the button's right edge */
+  top: calc(100% + 4px);      /* sits 4px below the button */
+  z-index: 10;                /* draws on top of the timer */
+  min-width: 120px;
+  max-height: 260px;          /* scrolls if the list is long */
+  overflow-y: auto;
+  padding: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35); /* soft shadow so it lifts off the card */
+  scrollbar-width: thin;                        /* slim scrollbar... */
+  scrollbar-color: var(--border) transparent;   /* ...in dark colours instead of the default light grey */
 }
 
+/* setCurrency() in index.js adds this class to open the menu,
+   and the window click handler removes it to close it */
+.dropdown-content.show {
+  display: block;
+}
+
+/* Each currency option */
+.dropdown-content a {
+  display: block;             /* full-width rows so the whole row is clickable */
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+  text-decoration: none;      /* removes the link underline */
+}
+
+.dropdown-content a:hover {
+  background: var(--surface-hover);
+}
+
+/* ------------------------------------------------------------------
+   Timer display
+   ------------------------------------------------------------------ */
 #time {
-  font-size: 50px;
-  color: white;
-  padding: 12px;
+  margin: 32px 0 8px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 52px;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums; /* every digit is the same width, so the timer doesn't jiggle */
+  letter-spacing: -0.02em;
 }
 
-#rateContainer {
-  color: white;
-  padding: 16px;
-  margin-bottom: 20px;
+/* The ":" and "." separators, dimmed so the digits stand out */
+#time .txt {
+  color: var(--text-faint);
+  margin: 0 2px;
 }
 
-#start{
-  background-color: #3d3d3d;
-  padding: 12px;
-  font-size: 12px;
+/* Hundredths of a second, slightly dimmer than the main digits */
+#time .ms {
+  color: var(--text-muted);
 }
 
-#stop{
-  background-color: #3d3d3d;
-  padding: 12px;
-  font-size: 12px;
+/* ------------------------------------------------------------------
+   Earnings line
+   ------------------------------------------------------------------ */
+.earnings {
+  margin: 0 0 28px;
+  text-align: center;
+  color: var(--text-muted);   /* the "Earnings" label */
+  font-size: 14px;
 }
 
-#reset{
-  background-color: #3d3d3d;
-  padding: 12px;
-  font-size: 12px;
+/* The dollar amount itself: brighter and monospace like the timer */
+.earnings .amount {
+  margin-left: 6px;
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------
+   Start / Stop / Reset buttons
+   (replaces the three separate #start, #stop, #reset rules, which
+   were identical, with one shared .btn rule)
+   ------------------------------------------------------------------ */
+
+/* Three equal-width columns, one per button */
+#buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+/* Default button: transparent with a thin outline */
+.btn {
+  padding: 10px 0;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s; /* smooth hover fade */
+}
+
+.btn:hover {
+  background: var(--surface-hover);
+}
+
+/* Start button: filled with the accent colour so it's the obvious first action */
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+/* Visible outline when tabbing through with the keyboard (not on mouse clicks) */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--text-faint);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------
+   Small screens (phones): tighter padding and a smaller timer so
+   "00:00:00.00" fits on one line
+   ------------------------------------------------------------------ */
+@media (max-width: 420px) {
+  .card {
+    padding: 20px 16px;
+  }
+
+  #time {
+    font-size: 40px;
+  }
 }
