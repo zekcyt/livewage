@@ -1,3 +1,26 @@
+const wageBtn = document.getElementById('showWageBtn');
+const calendarBtn = document.getElementById('showCalendarBtn');
+
+const wageSection = document.getElementById('wageSection');
+const calendarSection = document.getElementById('calendarSection');
+
+wageBtn.addEventListener('click', () => {
+    wageSection.style.display = 'block';
+    calendarSection.style.display = 'none';
+
+    wageBtn.classList.add('active');
+    calendarBtn.classList.remove('active');
+});
+
+calendarBtn.addEventListener('click', () => {
+    wageSection.style.display = 'none';
+    calendarSection.style.display = 'block';
+    
+    calendarBtn.classList.add('active');
+    wageBtn.classList.remove('active');
+});
+
+
 class Stopwatch {
     constructor() {
         this.startTime = 0;
@@ -94,13 +117,7 @@ class currencyMenu {
   }
 }
 
-// One shared menu instance for the page.
 const menu = new currencyMenu();
-
-// Called by the "Currency" button's onclick in index.html.
-// Previously this function didn't exist, so clicking the button threw an
-// error and nothing opened. It toggles the "show" class on #rateDropdown,
-// which style.css uses to switch the menu from hidden to visible.
 function setCurrency() {
   menu.dropdown();
 }
