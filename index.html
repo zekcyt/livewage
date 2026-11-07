@@ -19,8 +19,8 @@
 
         <div id="wageSection">
             <header>
-                    <h1>Stopwatch</h1>
-                    <h2 class="subtext">Live wage tracker with currency conversion</h2>
+                <h1>Stopwatch</h1>
+                <h2 class="subtext">Live wage tracker with currency conversion</h2>
             </header>
             <section class="card">
                 <div id="rateContainer">
@@ -58,14 +58,23 @@
         </div>
 
         <div id="calendarSection" style="display: none;">
-                <header>
-                    <h1>Heatmap</h1>
-                    <h2 class="subtext">Track your earnings over time</h2>
-                </header>
+            <header>
+                <h1>Heatmap</h1>
+                <h2 class="subtext">Visualize your earnings over time</h2>
+            </header>
                 <section class="card">
-                    <div id="calendarContainer">
+                    <div class="calendarWrapper">
+                        <div id="calendarMonths" class="calendarMonths"></div>
                         
-                        <p>Calendar functionality is under development.</p>
+                        <div class="calendarBody">
+                            <div class="calendarDays">
+                                <span>Mon</span>
+                                <span>Wed</span>
+                                <span>Fri</span>
+                            </div>
+                            
+                            <div id="calendarGrid" class="calendarGrid"></div>
+                        </div>
                     </div>
                 </section>
         </div>

@@ -4,6 +4,53 @@ const calendarBtn = document.getElementById('showCalendarBtn');
 const wageSection = document.getElementById('wageSection');
 const calendarSection = document.getElementById('calendarSection');
 
+//temp testing data for calendar
+const earningsData = {
+    "2026-11-02": 42.80,
+    "2026-11-05": 78.75,
+    "2026-11-06": 22.50,
+}
+
+function formatDate(date) {
+    return date.toISOString().split('T')[0];
+}
+
+function getLevel(amount) {
+    if (!amount || amount === 0) return 0;
+    if (amount < 40) return 1;
+    if (amount < 60) return 2;
+    if (amount < 80) return 3;
+    return 4;
+}
+
+function renderCalendar() {
+    const calendarGrid = document.getElementById('calendarGrid');
+    if (!calendarGrid) return;
+    calendarGrid.innerHTML = '';
+
+    const today = new Date();
+    const totalDays = 365;
+
+    for (let i = totalDays - 1; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(today.getDate() - i);
+
+        const dateStr = formatDate(d);
+        const amount = earningsData[dateStr] || 0;
+     
+        const level = getLevel(amount);
+    
+        const square = document.createElement('div');
+        square.classList.add('square')
+        square.dataset.level = level;
+        square.title = `${dateStr}: $${amount.toFixed(2)}`;
+
+        calendarGrid.appendChild(square);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', renderCalendar);
+
 wageBtn.addEventListener('click', () => {
     wageSection.style.display = 'block';
     calendarSection.style.display = 'none';
